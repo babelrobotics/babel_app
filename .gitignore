@@ -66,3 +66,6 @@ app.*.map.json
 .m
 .java
 .env
+.lock
+.cc
+.cmake
