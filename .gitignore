@@ -25,3 +25,10 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+.properties
+.sh
+.xcconfig
+.h
+.m
+.java
