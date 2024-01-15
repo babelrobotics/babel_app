@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "449385002533",
+    "project_id": "babelbots",
+    "storage_bucket": "babelbots.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449385002533:android:6864b6e0bd4b5b963571cc",
+        "android_client_info": {
+          "package_name": "com.babelrobotics.babelbots"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhMjiLN0AjG0QKudH039l56LfB1xhTkiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
