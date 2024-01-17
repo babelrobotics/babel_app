@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
+// Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'services/firebase_options.dart';
+
+// Import the firebase analytics package
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_performance/firebase_performance.dart';
-import 'firebase_options.dart';
+
+import 'routes.dart';
+import 'themes.dart';
 
 
 void main() {
-  FirebaseAnalytics analytics;
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
@@ -42,7 +46,10 @@ class _AppState extends State<App> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp();
+          return MaterialApp(
+            routes: appRoutes,
+            theme: appTheme
+          );
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
