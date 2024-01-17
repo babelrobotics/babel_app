@@ -7,8 +7,12 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('##in about screen');
     return Scaffold(
       appBar: AppBar(),
+      body: Center(
+        child: Text('helow')
+      )
     );
   }
 }

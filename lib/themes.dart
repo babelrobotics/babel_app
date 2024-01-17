@@ -10,7 +10,7 @@ var appTheme = ThemeData(
     bodyLarge: TextStyle(fontSize: 18),
     bodyMedium: TextStyle(fontSize: 16),
     labelLarge: TextStyle(
-      letterSpacing: 3.5,
+      letterSpacing: 1.5,
       fontWeight: FontWeight.bold
     ),
     displayLarge: TextStyle(
