@@ -20,8 +20,8 @@ class LoginScreen extends StatelessWidget {
           children: [
             Image.asset(
               'assets/logo.webp',
-              width: 150,
-              height: 150
+              width: 300,
+              height: 300
             ),
             Flexible(
               child: LoginButton(
@@ -30,8 +30,13 @@ class LoginScreen extends StatelessWidget {
                 loginMethod: AuthService().anonLogin,
                 color: Colors.deepPurple,
               )
-
-            )
+            ),
+            LoginButton(
+                icon: FontAwesomeIcons.google,
+                text: 'Sign in with Google',
+                loginMethod: AuthService().googleLogin,
+                color: Colors.blue,
+            ),
           ],
         ),
       ),
