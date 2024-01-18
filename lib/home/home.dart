@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:babelbots/login/login.dart';
+import 'package:babelbots/services/auth.dart';
+
 import 'package:babelbots/about/about.dart';
 import 'package:babelbots/modules/modules.dart';
 import 'package:babelbots/profile/profile.dart';
@@ -43,12 +46,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(
-        onSelectTab: _onSelectTab,
-        selectedIndex: _selectedIndex,
-      ),
-      body: _currentScreen(),
+    return StreamBuilder(
+      stream: AuthService().userStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center (
+            child: Text('Loading')
+          );
+        } else if (snapshot.hasError) {
+          return const Center (
+            child: Text('Error')
+          );
+        } else if (snapshot.hasData) {
+          return Scaffold(
+            bottomNavigationBar: BottomNavBar(
+              onSelectTab: _onSelectTab,
+              selectedIndex: _selectedIndex,
+            ),
+            body: _currentScreen(),
+          );
+        } else {
+          return const LoginScreen();
+        }
+      }
     );
   }
 }
