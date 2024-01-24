@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:babelbots/shared/bottom_nav.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:babelbots/services/models.dart';
+import 'package:babelbots/services/firestore.dart';
+import 'package:babelbots/shared/loading.dart';
+import 'package:babelbots/shared/error.dart';
+
+import 'dart:convert';
 
 class ModulesScreen extends StatelessWidget {
   const ModulesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          child: Text(
-            'about',
-            style: Theme.of(context).textTheme.labelLarge
+    return FutureBuilder<List<Module>>(
+      future: FireStoreService().getModules(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingScreen();
+        } else if (snapshot.hasError) {
+          return Center(
+            child: ErrorMessage(message: snapshot.error.toString()),
+          );
+        } else if (snapshot.hasData) {
+          var modules = snapshot.data!;
+          String modulesJson = jsonEncode(modules.map((module) => module.toJson()).toList());
+          print('##modules: $modulesJson');
+
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.deepPurple,
+              title: const Text('Modules'),
             ),
-          onPressed: () => Navigator.pushNamed(context, '/about'),
-        ),
-      ),
+            body: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20.0),
+              crossAxisSpacing: 10.0,
+              crossAxisCount: 2,
+              children: modules.map((module) => Text(module.title)).toList(),
+            ),
+          );
+        } else {
+          return const Text('No topics found in Firestore. Check database');
+        }
+      },
     );
   }
 }
