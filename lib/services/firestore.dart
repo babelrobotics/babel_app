@@ -72,7 +72,7 @@ class FireStoreService {
         userDocRef.set({
           'name': user.displayName ?? '',
           'email': user.email ?? '',
-          'profilePicture': user.photoURL ?? '',
+          'picture': user.photoURL ?? '',
           'createdDateTime': Timestamp.now(),
           'points': 0
           // Initialize other fields as needed
@@ -90,37 +90,14 @@ class FireStoreService {
     }
   }
 
-  // Fetches the user information from Firestore using firebase_user.User
-  Future<User?> getUserFromFirestore(firebase_user.User? firebaseUser) async {
-    if (firebaseUser != null) {
-      try {
-        DocumentReference userDocRef = _db.collection('users').doc(firebaseUser.uid);
-        DocumentSnapshot userSnapshot = await userDocRef.get();
-
-        if (userSnapshot.exists) {
-          Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
-          if (userData != null) {
-            return User.fromJson(userData); // Assuming you have a User model with a fromJson method
-          }
-        }
-        return null; // Return null if user does not exist or data is not available
-      } catch (e) {
-        print('Error getting user from Firestore: $e');
-        return null; // Handle exceptions and return null if an error occurs
-      }
-    } else {
-      return null; // Return null if firebase_user.User is null
-    }
-  }
-
-  // Listens to current user's report document in Firestore
-  Stream<Report> streamReport() {
+  // Listens to changes to the user document in Firestore
+  Stream<User?> userStream() {
     return AuthService().userStream.switchMap((user) {
       if (user != null) {
-        var ref = _db.collection('reports').doc(user.uid);
-        return ref.snapshots().map((doc) => Report.fromJson(doc.data()!));
+        var ref = _db.collection('users').doc(user.uid);
+        return ref.snapshots().map((doc) => User.fromJson(doc.data()!));
       } else {
-        return Stream.fromIterable([Report()]);
+        return Stream.fromIterable([User()]);
       }
     });
   }

@@ -89,6 +89,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       name: json['name'] as String? ?? '',
       points: json['points'] as int? ?? 0,
       picture: json['picture'] as String? ?? '',
+      bannerPicture: json['bannerPicture'] as String? ?? '',
       createdDateTime: json['createdDateTime'] as String? ?? '',
     );
 
@@ -97,6 +98,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'name': instance.name,
       'points': instance.points,
       'picture': instance.picture,
+      'bannerPicture': instance.bannerPicture,
       'createdDateTime': instance.createdDateTime,
     };
 
