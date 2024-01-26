@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_user;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:intl/intl.dart';
 import 'package:babelbots/services/auth.dart';
 import 'package:babelbots/services/models.dart';
 
@@ -72,7 +73,7 @@ class FireStoreService {
         userDocRef.set({
           'name': user.displayName ?? '',
           'email': user.email ?? '',
-          'profilePicture': user.photoURL ?? '',
+          'picture': user.photoURL ?? '',
           'createdDateTime': Timestamp.now(),
           'points': 0
           // Initialize other fields as needed
@@ -90,38 +91,24 @@ class FireStoreService {
     }
   }
 
-  // Fetches the user information from Firestore using firebase_user.User
-  Future<User?> getUserFromFirestore(firebase_user.User? firebaseUser) async {
-    if (firebaseUser != null) {
-      try {
-        DocumentReference userDocRef = _db.collection('users').doc(firebaseUser.uid);
-        DocumentSnapshot userSnapshot = await userDocRef.get();
-
-        if (userSnapshot.exists) {
-          Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
-          if (userData != null) {
-            return User.fromJson(userData); // Assuming you have a User model with a fromJson method
-          }
+  // Listens to changes to the user document in Firestore
+  Stream<User?> userStream() {
+  return AuthService().userStream.switchMap((user) {
+    if (user != null) {
+      var ref = _db.collection('users').doc(user.uid);
+      return ref.snapshots().map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        if (data.containsKey('createdDateTime') && data['createdDateTime'] is Timestamp) {
+          // Convert Timestamp to DateTime and then to String
+          DateTime dateTime = (data['createdDateTime'] as Timestamp).toDate();
+          data['createdDateTime'] = DateFormat('MMM yyyy').format(dateTime);
         }
-        return null; // Return null if user does not exist or data is not available
-      } catch (e) {
-        print('Error getting user from Firestore: $e');
-        return null; // Handle exceptions and return null if an error occurs
-      }
+        return User.fromJson(data);
+      });
     } else {
-      return null; // Return null if firebase_user.User is null
+      return Stream.fromIterable([User()]);
     }
-  }
+  });
+}
 
-  // Listens to current user's report document in Firestore
-  Stream<Report> streamReport() {
-    return AuthService().userStream.switchMap((user) {
-      if (user != null) {
-        var ref = _db.collection('reports').doc(user.uid);
-        return ref.snapshots().map((doc) => Report.fromJson(doc.data()!));
-      } else {
-        return Stream.fromIterable([Report()]);
-      }
-    });
-  }
 }

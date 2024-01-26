@@ -45,30 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: AuthService().userStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center (
-            child: Text('Loading')
-          );
-        } else if (snapshot.hasError) {
-          return const Center (
-            child: Text('Error')
-          );
-        } else if (snapshot.hasData) {
-          return Scaffold(
-            bottomNavigationBar: BottomNavBar(
-              onSelectTab: _onSelectTab,
-              selectedIndex: _selectedIndex,
-            ),
-            body: _currentScreen(),
-          );
-        } else {
-          return const LoginScreen();
-        }
+Widget build(BuildContext context) {
+  return StreamBuilder(
+    stream: AuthService().userStream,
+    builder: (context, snapshot) {
+      // Print the entire snapshot data
+      print('Snapshot data: ${snapshot.data}');
+
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: Text('Loading'));
+      } else if (snapshot.hasError) {
+        // Print the error if any
+        print('Stream error: ${snapshot.error}');
+        return const Center(child: Text('Error'));
+      } else if (snapshot.hasData) {
+        // Additional print to check the user data if available
+        print('User data: ${snapshot.data}');
+        return Scaffold(
+          bottomNavigationBar: BottomNavBar(
+            onSelectTab: _onSelectTab,
+            selectedIndex: _selectedIndex,
+          ),
+          body: _currentScreen(),
+        );
+      } else {
+        return const LoginScreen();
       }
-    );
-  }
+    }
+  );
+}
+
 }

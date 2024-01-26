@@ -1,140 +1,142 @@
-// ignore_for_file: deprecated_member_use
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+
+import 'package:babelbots/services/services.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
+    User user = Provider.of<User>(context);
+
+    // Default banner image - a flat colored Container
+    Widget bannerImage = user.bannerPicture?.isEmpty ?? true
+        ? Container(color: Colors.grey) // Default flat color
+        : Image.network(user.bannerPicture, fit: BoxFit.cover); // Network image
+
+    // Default avatar image - a flat colored CircleAvatar
+    Widget avatarImage = user.picture?.isEmpty ?? true
+        ? CircleAvatar(radius: 48, backgroundColor: const Color.fromARGB(255, 201, 162, 162)) // Default flat color
+        : CircleAvatar(radius: 48, backgroundImage: NetworkImage(user.picture)); // Network image
+
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {}, icon: const Icon(FontAwesomeIcons.angleLeft)),
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-          ),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(isDark ? FontAwesomeIcons.sun : FontAwesomeIcons.moon))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(children: [
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset("assets/lenny12.jpg")),
-            ),
-            const SizedBox(height: 10),
-            const Text('Username...',
-                style: TextStyle(
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22)),
-            const Text(
-              'Joined 1997',
-              style: TextStyle(fontFamily: 'Raleway'),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Edit Profile'),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    side: BorderSide.none,
-                    shape: const StadiumBorder()),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 3, 
+              child: Stack(
+                clipBehavior: Clip.none, // Allows the avatar to overlap the bottom edge of the banner
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    child: bannerImage, // Use the banner image widget
+                  ),
+                  Positioned(
+                    bottom: -25, // Half of the avatar's radius to hang off the bottom of the banner
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.white,
+                      child: avatarImage, // Use the avatar image widget
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 30),
-            const Divider(),
-            const SizedBox(height: 10),
-            ProfileMenuWidget(
-                title: "Achievements",
-                icon: FontAwesomeIcons.trophy,
-                onPress: () {}),
-            ProfileMenuWidget(
-                title: "Shop", icon: FontAwesomeIcons.shop, onPress: () {}),
-            ProfileMenuWidget(
-                title: "Subscription",
-                icon: FontAwesomeIcons.star,
-                onPress: () {}),
-            const Divider(),
-            const SizedBox(height: 10),
-            ProfileMenuWidget(
-                title: "Settings", icon: FontAwesomeIcons.cog, onPress: () {}),
-            ProfileMenuWidget(
-                title: "Logout",
-                icon: FontAwesomeIcons.doorOpen,
-                textColor: Colors.red,
-                endIcon: false,
-                onPress: () {}),
-          ]),
+            SizedBox(height: 30), // To give some space between the avatar and the name
+            Text(
+              user.name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              '${user.points} Points | Joined ${user.createdDateTime}',
+              style: Theme.of(context).textTheme.bodyMedium
+            ),
+            SizedBox(height: 10),
+            Flexible(
+              flex: 7,
+              child: DefaultTabController(
+                length: 2,
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey, // Grey background for the whole tab bar
+                            borderRadius: BorderRadius.circular(10), // Rounded corners for the container
+                          ),
+                          child: TabBar(
+                            tabs: [
+                              Tab(text: 'Badges'),
+                              Tab(text: 'Posts'),
+                            ],
+                            indicator: BoxDecoration(
+                              color: Colors.white, // White background for the selected tab
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              BadgeList(),
+                              PostList()
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class ProfileMenuWidget extends StatelessWidget {
-  const ProfileMenuWidget({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.onPress,
-    this.endIcon = true,
-    this.textColor,
-  });
-
-  final String title;
-  final IconData icon;
-  final VoidCallback onPress;
-  final bool endIcon;
-  final Color? textColor;
+class BadgeList extends StatelessWidget {
+  const BadgeList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.blueGrey.withOpacity(0.1),
-          ),
-          child: const Icon(FontAwesomeIcons.trophy, color: Colors.blueGrey),
+    return const Center(
+      child: Text(
+        "Looks like you've got a clean slate! Start collecting badges!",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black54,
         ),
-        title: const Text('Achievements',
-            style: TextStyle(
-                fontFamily: 'Raleway',
-                fontWeight: FontWeight.w400,
-                fontSize: 20)),
-        trailing: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.blueGrey.withOpacity(0.1),
-          ),
-          child: const Icon(FontAwesomeIcons.angleRight,
-              size: 18.0, color: Colors.blueGrey),
-        ));
+      ),
+    );
+  }
+}
+
+class PostList extends StatelessWidget {
+  const PostList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        "A world of thoughts, yet to be penned. Break the ice with your first post!",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black54,
+        ),
+      ),
+    );
   }
 }

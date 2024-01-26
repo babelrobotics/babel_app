@@ -94,6 +94,7 @@ class User {
   final String name;
   final int points;
   final String picture;
+  final String bannerPicture;
   final String createdDateTime;
 
   User({
@@ -101,6 +102,7 @@ class User {
     this.name = '',
     this.points = 0, 
     this.picture = '',
+    this.bannerPicture = '',
     this.createdDateTime = ''
   });
 
