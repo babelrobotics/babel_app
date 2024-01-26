@@ -54,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             Text(
-              '200 Points | Joined Nov 22.',
+              '${user.points} Points | Joined ${user.createdDateTime}',
               style: Theme.of(context).textTheme.bodyMedium
             ),
             SizedBox(height: 10),

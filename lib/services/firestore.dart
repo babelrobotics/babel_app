@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_user;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:intl/intl.dart';
 import 'package:babelbots/services/auth.dart';
 import 'package:babelbots/services/models.dart';
 
@@ -92,13 +93,22 @@ class FireStoreService {
 
   // Listens to changes to the user document in Firestore
   Stream<User?> userStream() {
-    return AuthService().userStream.switchMap((user) {
-      if (user != null) {
-        var ref = _db.collection('users').doc(user.uid);
-        return ref.snapshots().map((doc) => User.fromJson(doc.data()!));
-      } else {
-        return Stream.fromIterable([User()]);
-      }
-    });
-  }
+  return AuthService().userStream.switchMap((user) {
+    if (user != null) {
+      var ref = _db.collection('users').doc(user.uid);
+      return ref.snapshots().map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        if (data.containsKey('createdDateTime') && data['createdDateTime'] is Timestamp) {
+          // Convert Timestamp to DateTime and then to String
+          DateTime dateTime = (data['createdDateTime'] as Timestamp).toDate();
+          data['createdDateTime'] = DateFormat('MMM yyyy').format(dateTime);
+        }
+        return User.fromJson(data);
+      });
+    } else {
+      return Stream.fromIterable([User()]);
+    }
+  });
+}
+
 }
