@@ -14,6 +14,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(
@@ -35,13 +36,6 @@ class BottomNavBar extends StatelessWidget {
             size: 20,
           ),
           label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            FontAwesomeIcons.bolt,
-            size: 20,
-          ),
-          label: 'About',
         ),
       ],
       currentIndex: selectedIndex,

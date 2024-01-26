@@ -51,40 +51,90 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(height: 30), // To give some space between the avatar and the name
             Text(
               user.name,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Text(
               '200 Points | Joined Nov 22.',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium
             ),
             SizedBox(height: 10),
             Flexible(
               flex: 7,
               child: DefaultTabController(
                 length: 2,
-                child: Column(
-                  children: <Widget>[
-                    TabBar(
-                      tabs: [
-                        Tab(text: 'Badges'),
-                        Tab(text: 'Posts'),
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey, // Grey background for the whole tab bar
+                            borderRadius: BorderRadius.circular(10), // Rounded corners for the container
+                          ),
+                          child: TabBar(
+                            tabs: [
+                              Tab(text: 'Badges'),
+                              Tab(text: 'Posts'),
+                            ],
+                            indicator: BoxDecoration(
+                              color: Colors.white, // White background for the selected tab
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              BadgeList(),
+                              PostList()
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          // TODO: Define your BadgesWidget here
-                          Container(color: Colors.red), // Placeholder for BadgesWidget
-                          // TODO: Define your PostsWidget here
-                          Container(color: Colors.blue), // Placeholder for PostsWidget
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class BadgeList extends StatelessWidget {
+  const BadgeList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        "Looks like you've got a clean slate! Start collecting badges!",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black54,
+        ),
+      ),
+    );
+  }
+}
+
+class PostList extends StatelessWidget {
+  const PostList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        "A world of thoughts, yet to be penned. Break the ice with your first post!",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black54,
         ),
       ),
     );
