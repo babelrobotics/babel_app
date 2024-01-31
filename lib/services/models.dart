@@ -92,6 +92,7 @@ class Segment {
 class User {
   final String id;
   final String name;
+  final String email;
   final int points;
   final String picture;
   final String bannerPicture;
@@ -99,6 +100,7 @@ class User {
 
   User({
     this.id = '',
+    this.email = '',
     this.name = '',
     this.points = 0, 
     this.picture = '',

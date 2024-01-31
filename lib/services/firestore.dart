@@ -84,7 +84,7 @@ class FireStoreService {
         userDocRef.update({
           'name': user.displayName ?? '',
           'email': user.email ?? '',
-          'profilePicture': user.photoURL ?? '',
+          'picture': user.photoURL ?? '',
           // Update other fields as needed
         });
       }

@@ -1,180 +1,99 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(Settings());
-}
+import 'package:babelbots/services/services.dart';
+import 'package:babelbots/shared/shared.dart';
 
 class Settings extends StatelessWidget {
+  final User user;
+
+  Settings({required this.user});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SettingsPage(
-        appBarLeading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      home: SettingsPage(user: user),
     );
   }
 }
 
 class SettingsPage extends StatelessWidget {
-  final Widget appBarLeading;
+  final User user;
 
-  SettingsPage({required this.appBarLeading});
+  SettingsPage({required this.user});
 
   @override
   Widget build(BuildContext context) {
+    Map<String, Map<String, String>> mapSectionFieldValues = {
+      SETTINGS_SECTION_DETAILS: {
+        DETAILS_EMAIL: user.email,
+        DETAILS_NAME: user.name,
+      },
+      SETTINGS_SECTION_PREFERENCES: {
+        "Theme": "light",
+        "PictureBorder": "square",
+      },
+    };
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Account',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Text('Account', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         centerTitle: true,
-        leading: appBarLeading,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Container(
-        color: Colors.grey[200],
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            CircleAvatar(
-              radius: 70,
-              backgroundImage: AssetImage('assets/profile_picture.jpg'),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text('Email'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle Email
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EmailPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text('Option 2'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle Option 2
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Option2Page(),
-                            ),
-                          );
-                        },
-                      ),
-                      Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text('Option 3'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle Option 3
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Option3Page(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 4.0, 248.0, 0),
-              child: Text(
-                'App Features',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text('App Feature 1'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle App Feature 1
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AppFeature1Page(),
-                            ),
-                          );
-                        },
-                      ),
-                      Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text('App Feature 2'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle App Feature 2
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AppFeature2Page(),
-                            ),
-                          );
-                        },
-                      ),
-                      Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text('App Feature 3'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          // Handle App Feature 3
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AppFeature3Page(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+        color: Colors.grey,
+        child: ListView(
+          children: mapSectionFieldValues.entries.map((section) => buildSection(section, context)).toList(),
         ),
       ),
     );
   }
+
+  Widget buildSection(MapEntry<String, Map<String, String>> section, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(8.0), // Add margin for the section
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              section.key,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), // Rounded corners
+            child: Column(
+              children: section.value.entries.map((field) => buildListTile(field, context)).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListTile(MapEntry<String, String> field, BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(field.key),
+          subtitle: Text(field.value),
+          trailing: Icon(Icons.arrow_forward),
+          onTap: () {
+            // Handle navigation or action
+          },
+        ),
+        Divider(height: 1, color: Colors.grey),
+      ],
+    );
+  }
 }
+
+
 
 class EmailPage extends StatefulWidget {
   @override

@@ -86,6 +86,7 @@ Map<String, dynamic> _$SegmentToJson(Segment instance) => <String, dynamic>{
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String? ?? '',
+      email: json['email'] as String? ?? '',
       name: json['name'] as String? ?? '',
       points: json['points'] as int? ?? 0,
       picture: json['picture'] as String? ?? '',
@@ -96,6 +97,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'email': instance.email,
       'points': instance.points,
       'picture': instance.picture,
       'bannerPicture': instance.bannerPicture,
