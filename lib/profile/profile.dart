@@ -84,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
                                   10), // Rounded corners for the container
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(3.0),
+                              padding: const EdgeInsets.all(3),
                               child: TabBar(
                                 tabs: [
                                   Tab(text: 'Badges'),
@@ -122,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Settings(user: user)),
+                      MaterialPageRoute(builder: (context) => SettingsScreen(user: user)),
                     );
                   }))
         ],
