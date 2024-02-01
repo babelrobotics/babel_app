@@ -49,7 +49,7 @@ class _AppState extends State<App> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamProvider(
-            create: (_) => FireStoreService().userStream(),
+            create: (_) => FirestoreService().userStream(),
             catchError: (_, err) => User(),
             initialData: User(),
             child: MaterialApp(
@@ -58,9 +58,6 @@ class _AppState extends State<App> {
             ),
           );
         }
-          
-          
-
         // Otherwise, show something whilst waiting for initialization to complete
         return Text('loading');
       },

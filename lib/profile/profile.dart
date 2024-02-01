@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: true);
 
     // Default banner image - a flat colored Container
     Widget bannerImage = user.bannerPicture?.isEmpty ?? true
@@ -122,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SettingsScreen(user: user)),
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
                     );
                   }))
         ],

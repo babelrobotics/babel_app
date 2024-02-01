@@ -13,7 +13,7 @@ class ModulesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Module>>(
-      future: FireStoreService().getModules(),
+      future: FirestoreService().getModules(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();

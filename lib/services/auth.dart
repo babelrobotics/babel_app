@@ -37,7 +37,7 @@ class AuthService {
       );
 
       UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
-      FireStoreService().createOrUpdateUser(userCredential.user);
+      FirestoreService().createUserFromAuthUser(userCredential.user);
       
     } on FirebaseAuthException catch (ex) {
 

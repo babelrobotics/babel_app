@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:babelbots/services/auth.dart';
 import 'package:babelbots/services/models.dart';
 
-class FireStoreService {
+class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 
@@ -63,7 +63,7 @@ class FireStoreService {
             Users
 =========================================================*/
 
-  Future<void> createOrUpdateUser(firebase_user.User? user) async {
+  Future<void> createUserFromAuthUser(firebase_user.User? user) async {
     if (null != user) {
       DocumentReference userDocRef = _db.collection('users').doc(user.uid);
 
@@ -93,22 +93,34 @@ class FireStoreService {
 
   // Listens to changes to the user document in Firestore
   Stream<User?> userStream() {
-  return AuthService().userStream.switchMap((user) {
-    if (user != null) {
-      var ref = _db.collection('users').doc(user.uid);
-      return ref.snapshots().map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-        if (data.containsKey('createdDateTime') && data['createdDateTime'] is Timestamp) {
-          // Convert Timestamp to DateTime and then to String
-          DateTime dateTime = (data['createdDateTime'] as Timestamp).toDate();
-          data['createdDateTime'] = DateFormat('MMM yyyy').format(dateTime);
-        }
-        return User.fromJson(data);
-      });
-    } else {
-      return Stream.fromIterable([User()]);
+    return AuthService().userStream.switchMap((user) {
+      if (user != null) {
+        var ref = _db.collection('users').doc(user.uid);
+        return ref.snapshots().map((doc) {
+          var data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;
+          if (data.containsKey('createdDateTime') && data['createdDateTime'] is Timestamp) {
+            // Convert Timestamp to DateTime and then to String
+            DateTime dateTime = (data['createdDateTime'] as Timestamp).toDate();
+            data['createdDateTime'] = DateFormat('MMM yyyy').format(dateTime);
+          }
+          return User.fromJson(data);
+        });
+      } else {
+        return Stream.fromIterable([User()]);
+      }
+    });
+  }
+
+  Future<void> updateUserDetails(String userId, Map<String, dynamic> updatedValues) async {
+    DocumentReference userDocRef = _db.collection('users').doc(userId);
+
+    try {
+      await userDocRef.update(updatedValues);
+    } catch (e) {
+      print('Error updating user data: $e');
+      // Handle or rethrow the exception as needed
     }
-  });
-}
+  }
 
 }
