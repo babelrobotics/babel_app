@@ -78,15 +78,6 @@ class FirestoreService {
           'points': 0
           // Initialize other fields as needed
         });
-      } else {
-        print('##user exists');
-        // Update existing user document if necessary
-        userDocRef.update({
-          'name': user.displayName ?? '',
-          'email': user.email ?? '',
-          'picture': user.photoURL ?? '',
-          // Update other fields as needed
-        });
       }
     }
   }
