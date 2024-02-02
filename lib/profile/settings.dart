@@ -25,12 +25,10 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        title: Text('Account'),
         centerTitle: true,
       ),
       body: Container(
-        color: Colors.grey[200],
         child: Column(
           children: [
             Expanded(
@@ -68,15 +66,9 @@ class SettingsScreen extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             child: Text(
               section.key,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
             ),
           ),
         Card(
-          color: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -100,9 +92,10 @@ class SettingsScreen extends StatelessWidget {
       title: const Text('Lights'), 
       value: field.value == 'light',
       onChanged: (bool newValue) {
-        // Handle theme switch logic here
+        final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+        themeNotifier.toggleTheme();
       },
-      secondary: const Icon(Icons.lightbulb_outline), // Icon on the right side
+      secondary: const Icon(Icons.lightbulb_outline), 
     );
   } else {
     tile = ListTile(
@@ -116,9 +109,6 @@ class SettingsScreen extends StatelessWidget {
           ),
           Text(
             field.value, // Second string on the right
-            style: TextStyle(
-              color: Color.fromRGBO(141, 136, 136, 0.75),
-            ),
           ),
         ],
       ),
@@ -137,7 +127,7 @@ class SettingsScreen extends StatelessWidget {
   return Column(
     children: [
       tile,
-      if (!isLastTile) const Divider(height: 1, color: Colors.grey),
+      if (!isLastTile) const Divider(height: 1),
     ],
   );
 }

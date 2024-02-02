@@ -13,17 +13,13 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: true);
 
-    // Default banner image - a flat colored Container
-    Widget bannerImage = user.bannerPicture?.isEmpty ?? true
-        ? Container(color: Colors.grey) // Default flat color
-        : Image.network(user.bannerPicture, fit: BoxFit.cover); // Network image
+    // Default banner image
+    Widget bannerImage = Image.network(user.bannerPicture, fit: BoxFit.cover); // Network image
 
-    // Default avatar image - a flat colored CircleAvatar
+    // Default avatar image
     Widget avatarImage = user.picture?.isEmpty ?? true
-        ? CircleAvatar(
-            radius: 63,
-            backgroundColor:
-                const Color.fromARGB(255, 201, 162, 162)) // Default flat color
+        ? const CircleAvatar(
+            radius: 63)
         : CircleAvatar(
             radius: 63,
             backgroundImage: NetworkImage(user.picture)); // Network image
@@ -50,7 +46,6 @@ class ProfileScreen extends StatelessWidget {
                           -25, // Half of the avatar's radius to hang off the bottom of the banner
                       child: CircleAvatar(
                         radius: 65,
-                        backgroundColor: Colors.white,
                         child: avatarImage, // Use the avatar image widget
                       ),
                     ),
@@ -65,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Text('${user.points} Points | Joined ${user.createdDateTime}',
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: Theme.of(context).textTheme.titleMedium),
               SizedBox(height: 10),
               Flexible(
                 flex: 7,
@@ -78,28 +73,20 @@ class ProfileScreen extends StatelessWidget {
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors
-                                  .grey, // Grey background for the whole tab bar
                               borderRadius: BorderRadius.circular(
                                   10), // Rounded corners for the container
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(3),
+                            child: const Padding(
+                              padding:  EdgeInsets.all(3),
                               child: TabBar(
                                 tabs: [
                                   Tab(text: 'Badges'),
                                   Tab(text: 'Posts'),
                                 ],
-                                indicator: BoxDecoration(
-                                  color: Colors
-                                      .white, // White background for the selected tab
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                indicatorSize: TabBarIndicatorSize.tab,
                               ),
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             child: TabBarView(
                               children: [BadgeList(), PostList()],
                             ),
@@ -118,7 +105,6 @@ class ProfileScreen extends StatelessWidget {
               child: IconButton(
                   icon: Icon(Icons.settings),
                   iconSize: 35,
-                  color: Colors.white,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -140,10 +126,6 @@ class BadgeList extends StatelessWidget {
       child: Text(
         "Looks like you've got a clean slate! Start collecting badges!",
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black54,
-        ),
       ),
     );
   }
@@ -158,10 +140,6 @@ class PostList extends StatelessWidget {
       child: Text(
         "A world of thoughts, yet to be penned. Break the ice with your first post!",
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black54,
-        ),
       ),
     );
   }

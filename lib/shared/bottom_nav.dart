@@ -39,7 +39,6 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      fixedColor: Colors.deepPurple[200],
       onTap: onSelectTab,
     );
   }

@@ -53,17 +53,16 @@ class _EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit ${widget.detail.key}', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        title: Text('Edit ${widget.detail.key}'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           TextButton(
             onPressed: _saveAndUpdate,
-            child: Text('Save', style: TextStyle(color: Colors.black)),
+            child: Text('Save'),
           ),
         ],
       ),

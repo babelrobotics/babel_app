@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:babelbots/services/services.dart';
+import 'package:babelbots/shared/shared.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +16,17 @@ import 'themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(App());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeNotifier>(
+          create: (context) => ThemeNotifier(),
+        ),
+        // Add other providers here if needed
+      ],
+      child: App(),
+    ),
+  );
 }
 
 /// We are using a StatefulWidget such that we only create the [Future] once,
@@ -48,17 +59,22 @@ class _AppState extends State<App> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+          final themeNotifier = Provider.of<ThemeNotifier>(context);
           return StreamProvider(
             create: (_) => FirestoreService().userStream(),
             catchError: (_, err) => User(),
             initialData: User(),
-            child: MaterialApp(
-              routes: appRoutes,
-              theme: appTheme
+            child: Consumer<ThemeNotifier>(
+              builder: (context, themeNotifier, child) {
+                return MaterialApp(
+                  routes: appRoutes,
+                  theme: themeNotifier.themeData,
+                );
+              },
             ),
           );
         }
-        // Otherwise, show something whilst waiting for initialization to complete
+        // Otherwise, show something while waiting for initialization to complete
         return Text('loading');
       },
     );
