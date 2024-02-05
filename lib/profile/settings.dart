@@ -13,13 +13,15 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: true);
     String truncatedEmail = user.email.length > 25 ? user.email.substring(0, 22) + "..." : user.email;
+    String currentTheme = user.preferences.containsKey('theme') ? user.preferences['theme'] : 'light';
+
     Map<String, Map<String, String>> mapSection_Field_Values = {
       SECTION_DETAILS: {
         EMAIL: truncatedEmail,
         NAME: user.name,
       },
       SECTION_PREFERENCES: {
-        THEME: 'light',
+        THEME: currentTheme,
       },
     };
 
@@ -88,12 +90,16 @@ class SettingsScreen extends StatelessWidget {
   Widget tile;
 
   if (THEME == field.key) {
+    bool isLightThemeSelected = field.value == 'light'; // This should reflect the actual preference
     tile = SwitchListTile(
       title: const Text('Lights'), 
-      value: field.value == 'light',
-      onChanged: (bool newValue) {
+      value: isLightThemeSelected,
+      onChanged: (bool newValue) async {
         final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
-        themeNotifier.toggleTheme();
+        themeNotifier.setDarkMode(!newValue);
+
+        String newTheme = newValue ? "light" : "dark";
+        await FirestoreService().updateUserDetails(userId, {"preferences.theme": newTheme});
       },
       secondary: const Icon(Icons.lightbulb_outline), 
     );

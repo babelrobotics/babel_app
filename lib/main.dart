@@ -49,33 +49,41 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
-        // Check for errors
         if (snapshot.hasError) {
-          return Text('error');
+          return Text('Error initializing Firebase');
         }
-
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          final themeNotifier = Provider.of<ThemeNotifier>(context);
-          return StreamProvider(
-            create: (_) => FirestoreService().userStream(),
-            catchError: (_, err) => User(),
-            initialData: User(),
-            child: Consumer<ThemeNotifier>(
-              builder: (context, themeNotifier, child) {
-                return MaterialApp(
-                  routes: appRoutes,
-                  theme: themeNotifier.themeData,
+          // Initialize StreamProvider for User data here
+          return StreamProvider<User?>.value(
+            value: FirestoreService().userStream(),
+            initialData: null,
+            catchError: (_, __) => null,
+            child: Consumer<User?>(
+              builder: (context, user, _) {
+                // Check if the user data contains a theme preference and apply it
+                if (user != null && user.preferences.containsKey('theme')) {
+                  final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+                  final isDarkMode = user.preferences['theme'] == 'dark';
+                  themeNotifier.setDarkMode(isDarkMode);
+                }
+                // Proceed to build MaterialApp with Provider for ThemeNotifier
+                return Consumer<ThemeNotifier>(
+                  builder: (context, themeNotifier, _) {
+                    return MaterialApp(
+                      routes: appRoutes,
+                      theme: themeNotifier.themeData,
+                      // Since we're using the routes table, ensure no 'home:' is defined as mentioned earlier
+                    );
+                  },
                 );
               },
             ),
           );
         }
-        // Otherwise, show something while waiting for initialization to complete
-        return Text('loading');
+        // Firebase initialization not complete, show a loader
+        return CircularProgressIndicator();
       },
     );
   }

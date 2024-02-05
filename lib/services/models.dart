@@ -98,6 +98,7 @@ class User {
   final String picture;
   final String bannerPicture;
   final String createdDateTime;
+  final Map<String, dynamic> preferences;
 
   User({
     this.id = '',
@@ -107,7 +108,8 @@ class User {
     this.points = 0, 
     this.picture = '',
     this.bannerPicture = '',
-    this.createdDateTime = ''
+    this.createdDateTime = '',
+    this.preferences = const {}
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

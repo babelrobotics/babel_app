@@ -93,6 +93,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       picture: json['picture'] as String? ?? '',
       bannerPicture: json['bannerPicture'] as String? ?? '',
       createdDateTime: json['createdDateTime'] as String? ?? '',
+      preferences: json['preferences'] as Map<String, dynamic>? ?? const {},
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -104,6 +105,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'picture': instance.picture,
       'bannerPicture': instance.bannerPicture,
       'createdDateTime': instance.createdDateTime,
+      'preferences': instance.preferences,
     };
 
 Report _$ReportFromJson(Map<String, dynamic> json) => Report(

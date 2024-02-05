@@ -13,8 +13,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: true);
 
-    // Default banner image
-    Widget bannerImage = Image.network(user.bannerPicture, fit: BoxFit.cover); // Network image
+    Widget bannerImage = Image.asset('assets/banners/${user.bannerPicture}.png', fit: BoxFit.cover);
 
     // Default avatar image
     Widget avatarImage = user.picture?.isEmpty ?? true

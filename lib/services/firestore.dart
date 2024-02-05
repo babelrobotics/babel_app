@@ -75,7 +75,8 @@ class FirestoreService {
           'email': user.email ?? '',
           'picture': user.photoURL ?? '',
           'createdDateTime': Timestamp.now(),
-          'points': 0
+          'points': 0,
+          'bannerPicture': 'grey-banner'
           // Initialize other fields as needed
         });
       }
