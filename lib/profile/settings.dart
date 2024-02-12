@@ -1,44 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:babelbots/services/services.dart';
 import 'package:babelbots/shared/shared.dart';
+import 'package:provider/provider.dart';
 
 import 'edit.dart';
 
 class SettingsScreen extends StatelessWidget {
-  final User user;
-  
 
-  const SettingsScreen({super.key, required this.user});
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context, listen: true);
     String truncatedEmail = user.email.length > 25 ? user.email.substring(0, 22) + "..." : user.email;
+    String currentTheme = user.preferences.containsKey('theme') ? user.preferences['theme'] : 'light';
+
     Map<String, Map<String, String>> mapSection_Field_Values = {
-      SETTINGS_SECTION_DETAILS: {
-        DETAILS_EMAIL: truncatedEmail,
-        DETAILS_NAME: user.name,
-        DETAILS_SUBSCRIPTION: user.subscription
+      SECTION_DETAILS: {
+        EMAIL: truncatedEmail,
+        NAME: user.name,
       },
-      SETTINGS_SECTION_PREFERENCES: {
-        "Theme": "Light",
-        "PictureBorder": "Square",
-        "Notifications": "Deliver Quietly",
+      SECTION_PREFERENCES: {
+        THEME: currentTheme,
       },
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        title: Text('Account'),
         centerTitle: true,
       ),
       body: Container(
-        color: Colors.grey[200],
         child: Column(
           children: [
             Expanded(
               child: ListView(
-                children: mapSection_Field_Values.entries.map((section) => buildSection(section, context)).toList(),
+                children: mapSection_Field_Values.entries.map((section) => buildSection(section, context, user.id)).toList(),
               ),
             ),
             Padding(
@@ -58,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget buildSection(
-    MapEntry<String, Map<String, String>> section, BuildContext context) {
+    MapEntry<String, Map<String, String>> section, BuildContext context, String userId) {
   final tiles = section.value.entries;
 
   return Container(
@@ -66,27 +63,21 @@ class SettingsScreen extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (section.key != SETTINGS_SECTION_DETAILS)
+        if (section.key != SECTION_DETAILS)
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
               section.key,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
             ),
           ),
         Card(
-          color: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
             children: List.generate(tiles.length, (index) {
               final isLastTile = index == tiles.length - 1;
-              return buildListTile(section.value.entries.elementAt(index), context, isLastTile);
+              return buildListTile(section.value.entries.elementAt(index), context, isLastTile, userId);
             }),
           ),
         ),
@@ -95,39 +86,56 @@ class SettingsScreen extends StatelessWidget {
   );
 }
 
-  Widget buildListTile(MapEntry<String, String> field, BuildContext context, bool isLastTile) {
-    return Column(
-      
-      children: [
-        ListTile(
-          title: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  field.key, // First string on the left
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Text(
-                field.value, // Second string on the right
-                style: TextStyle(
-                  color: Color.fromRGBO(141, 136, 136, 0.75),
-                ),
-              ),
-            ],
+  Widget buildListTile(MapEntry<String, String> field, BuildContext context, bool isLastTile, String userId) {
+  Widget tile;
+
+  if (THEME == field.key) {
+    bool isLightThemeSelected = field.value == 'light'; 
+    tile = SwitchListTile(
+      title: const Text('Lights'), 
+      value: isLightThemeSelected,
+      onChanged: (bool newValue) async {
+        final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+        themeNotifier.setDarkMode(!newValue);
+
+        String newTheme = newValue ? "light" : "dark";
+        await FirestoreService().updateUserDetails(userId, {"preferences.theme": newTheme});
+      },
+      secondary: const Icon(Icons.lightbulb_outline), 
+    );
+  } else {
+    tile = ListTile(
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              field.key, 
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          trailing: Icon(Icons.arrow_forward),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EditScreen(detail: field)),
-            );
-          },
-        ),
-
-        if(!isLastTile) const Divider(height: 1, color: Colors.grey),
-
-      ],
+          Text(
+            field.value, 
+          ),
+        ],
+      ),
+      trailing: Icon(Icons.arrow_forward),
+      onTap: () {
+        if (NAME == field.key) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditScreen(userId: userId, detail: field)),
+          );
+        }
+      },
     );
   }
+
+  return Column(
+    children: [
+      tile,
+      if (!isLastTile) const Divider(height: 1),
+    ],
+  );
+}
+
 }
