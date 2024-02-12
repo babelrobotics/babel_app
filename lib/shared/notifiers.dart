@@ -6,10 +6,9 @@ class ThemeNotifier with ChangeNotifier {
   bool _isDarkMode = false;
 
   ThemeNotifier() {
-    // Optionally initialize the theme here
+    
   }
 
-  // Method to explicitly set the theme mode
   void setDarkMode(bool isDarkMode) {
     _isDarkMode = isDarkMode;
     notifyListeners();

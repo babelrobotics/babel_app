@@ -29,16 +29,44 @@ const EMAIL = 'Email';
 const NAME = 'Name';
 const SECTION_PREFERENCES = 'Preferences';
 const THEME = 'Theme';
-const PICTURE_BORDER = 'Picture Border';
 
 const EMAIL_FS = 'email';
 const NAME_FS = 'name';
 const THEME_FS = 'theme';
-const PICTURE_BORDER_FS = 'border';
 
 const MAPPING_APP_FIELD_TO_FS_FIELD = {
   EMAIL: EMAIL_FS,
   NAME: NAME_FS,
   THEME: THEME_FS,
-  PICTURE_BORDER: PICTURE_BORDER_FS
 };
+
+//Banners
+
+const BLUE_BANNER = 'blue-banner.png';
+const GREEN_BANNER = 'green-banner.png';
+const GREY_BANNER = 'grey-banner.png';
+const ORANGE_BANNER = 'orange-banner.png';
+const PINK_BANNER = 'pink-banner.png';
+const PURPLE_BANNER = 'purple-banner.png';
+const RED_BANNER = 'red-banner.png';
+const YELLOW_BANNER = 'yellow-banner.png';
+
+const List<String> BANNERS_LIST = [
+  BLUE_BANNER,
+  GREEN_BANNER,
+  GREY_BANNER,
+  ORANGE_BANNER,
+  PINK_BANNER,
+  PURPLE_BANNER,
+  RED_BANNER,
+  YELLOW_BANNER
+];
+
+//Borders
+const CIRCLE_BORDER = 'circle-border.png';
+const SQUARE_BORDER = 'square-border.png';
+
+const List<String> BORDERS_LIST = [
+  CIRCLE_BORDER,
+  SQUARE_BORDER
+];

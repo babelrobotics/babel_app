@@ -3,11 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:babelbots/services/services.dart';
 import 'package:babelbots/shared/shared.dart';
 
-// Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
 
-// Import the firebase analytics package
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'routes.dart';
@@ -22,7 +20,6 @@ void main() {
         ChangeNotifierProvider<ThemeNotifier>(
           create: (context) => ThemeNotifier(),
         ),
-        // Add other providers here if needed
       ],
       child: App(),
     ),
@@ -74,7 +71,6 @@ class _AppState extends State<App> {
                     return MaterialApp(
                       routes: appRoutes,
                       theme: themeNotifier.themeData,
-                      // Since we're using the routes table, ensure no 'home:' is defined as mentioned earlier
                     );
                   },
                 );
@@ -82,7 +78,6 @@ class _AppState extends State<App> {
             ),
           );
         }
-        // Firebase initialization not complete, show a loader
         return CircularProgressIndicator();
       },
     );

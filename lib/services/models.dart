@@ -95,8 +95,9 @@ class User {
   final String email;
   final String subscription;
   final int points;
-  final String picture;
-  final String bannerPicture;
+  final String avatar;
+  final String banner;
+  final String border;
   final String createdDateTime;
   final Map<String, dynamic> preferences;
 
@@ -106,8 +107,9 @@ class User {
     this.name = '',
     this.subscription = '',
     this.points = 0, 
-    this.picture = '',
-    this.bannerPicture = '',
+    this.avatar = '',
+    this.banner = '',
+    this.border = '',
     this.createdDateTime = '',
     this.preferences = const {}
   });

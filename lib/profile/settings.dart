@@ -90,7 +90,7 @@ class SettingsScreen extends StatelessWidget {
   Widget tile;
 
   if (THEME == field.key) {
-    bool isLightThemeSelected = field.value == 'light'; // This should reflect the actual preference
+    bool isLightThemeSelected = field.value == 'light'; 
     tile = SwitchListTile(
       title: const Text('Lights'), 
       value: isLightThemeSelected,
@@ -109,12 +109,12 @@ class SettingsScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              field.key, // First string on the left
+              field.key, 
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Text(
-            field.value, // Second string on the right
+            field.value, 
           ),
         ],
       ),

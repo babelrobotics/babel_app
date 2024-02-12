@@ -90,8 +90,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       name: json['name'] as String? ?? '',
       subscription: json['subscription'] as String? ?? '',
       points: json['points'] as int? ?? 0,
-      picture: json['picture'] as String? ?? '',
-      bannerPicture: json['bannerPicture'] as String? ?? '',
+      avatar: json['avatar'] as String? ?? '',
+      banner: json['banner'] as String? ?? '',
+      border: json['border'] as String? ?? '',
       createdDateTime: json['createdDateTime'] as String? ?? '',
       preferences: json['preferences'] as Map<String, dynamic>? ?? const {},
     );
@@ -102,8 +103,9 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'subscription': instance.subscription,
       'points': instance.points,
-      'picture': instance.picture,
-      'bannerPicture': instance.bannerPicture,
+      'avatar': instance.avatar,
+      'banner': instance.banner,
+      'border': instance.border,
       'createdDateTime': instance.createdDateTime,
       'preferences': instance.preferences,
     };

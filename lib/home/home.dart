@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0;
 
-  // Function to handle tab selection
+
   void _onSelectTab(int index) {
     setState(() {
       _selectedIndex = index;
@@ -49,18 +49,18 @@ Widget build(BuildContext context) {
   return StreamBuilder(
     stream: AuthService().userStream,
     builder: (context, snapshot) {
-      // Print the entire snapshot data
-      print('Snapshot data: ${snapshot.data}');
+
+      print('##Snapshot data: ${snapshot.data}');
 
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(child: Text('Loading'));
       } else if (snapshot.hasError) {
-        // Print the error if any
-        print('Stream error: ${snapshot.error}');
+
+        print('##Stream error: ${snapshot.error}');
         return const Center(child: Text('Error'));
       } else if (snapshot.hasData) {
-        // Additional print to check the user data if available
-        print('User data: ${snapshot.data}');
+
+        print('##User data: ${snapshot.data}');
         return Scaffold(
           bottomNavigationBar: BottomNavBar(
             onSelectTab: _onSelectTab,

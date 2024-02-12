@@ -69,15 +69,15 @@ class FirestoreService {
 
       var userDoc = await userDocRef.get();
       if (!userDoc.exists) {
-        // Create a new user document
         userDocRef.set({
           'name': user.displayName ?? '',
           'email': user.email ?? '',
-          'picture': user.photoURL ?? '',
+          'avatar': user.photoURL ?? '',
           'createdDateTime': Timestamp.now(),
           'points': 0,
-          'bannerPicture': 'grey-banner'
-          // Initialize other fields as needed
+          'banner': 'grey-banner',
+          'border': 'circle-border'
+
         });
       }
     }
@@ -92,7 +92,7 @@ class FirestoreService {
           var data = doc.data() as Map<String, dynamic>;
           data['id'] = doc.id;
           if (data.containsKey('createdDateTime') && data['createdDateTime'] is Timestamp) {
-            // Convert Timestamp to DateTime and then to String
+            //Convert Timestamp to DateTime and then to String
             DateTime dateTime = (data['createdDateTime'] as Timestamp).toDate();
             data['createdDateTime'] = DateFormat('MMM yyyy').format(dateTime);
           }
@@ -111,7 +111,6 @@ class FirestoreService {
       await userDocRef.update(updatedValues);
     } catch (e) {
       print('Error updating user data: $e');
-      // Handle or rethrow the exception as needed
     }
   }
 
